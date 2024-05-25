@@ -28,7 +28,7 @@ function LoginPage() {
             <Button className="w-full">Sign in</Button>
             <div className="mt-4 text-center text-sm">
                   Don't have an account?{" "}
-              <Link to={"/Register"} className="underline">
+              <Link to={"/auth/Register"} className="underline">
                   Sign in
               </Link>
             </div>
