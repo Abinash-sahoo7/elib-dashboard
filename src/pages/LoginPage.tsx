@@ -41,7 +41,7 @@ function LoginPage() {
           <CardTitle className="text-2xl mb-5">Login</CardTitle>
           <CardDescription>
               Enter your email below to login to your account.<br />
-              {mutation.isError && <span className='text-red-500'>Something Went wronge</span>}
+              {mutation.isError && <span className='text-red-500'>{`Something Went wronge`}</span>}
           </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
