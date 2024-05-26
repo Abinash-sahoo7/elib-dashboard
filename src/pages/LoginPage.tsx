@@ -2,18 +2,35 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { login } from '@/http/api'
+import { useMutation } from '@tanstack/react-query'
 import { useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 function LoginPage() {
 
+  const navigate = useNavigate();
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+
+  const mutation = useMutation({
+    mutationFn: login,
+    onSuccess: () => {
+      console.log("Login successfully");
+      navigate('/dashboard/home')
+    }
+  })
 
   const handleSubmitLogin = () => {
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
     console.log('data', {email, password});
+
+    if(!email || !password){
+      return alert('please enter email or password');
+    }
+    // Mutation
+    mutation.mutate({email, password})
   }
 
   return (
