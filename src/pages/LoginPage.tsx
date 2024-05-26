@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { login } from '@/http/api'
 import { useMutation } from '@tanstack/react-query'
+import { Loader } from 'lucide-react'
 import { useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -40,6 +41,7 @@ function LoginPage() {
           <CardTitle className="text-2xl mb-5">Login</CardTitle>
           <CardDescription>
               Enter your email below to login to your account.
+              {mutation.isPending && <div>Loading..</div>}
           </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
@@ -53,11 +55,15 @@ function LoginPage() {
           </div>
           </CardContent>
           <CardFooter className='flex flex-col'>
-            <Button onClick={handleSubmitLogin} className="w-full">Sign in</Button>
+            <Button onClick={handleSubmitLogin} className="w-full" disabled={mutation.isPending}>
+              {mutation.isPending ? <Loader className='animate-spin' /> : '' }
+              <span className='ml-2'>Sign in </span>
+            </Button>
             <div className="mt-4 text-center text-sm">
                   Don't have an account?{" "}
               <Link to={"/auth/Register"} className="underline">
-                  Sign in
+                 
+                  <span>Sign up</span>
               </Link>
             </div>
           </CardFooter>
