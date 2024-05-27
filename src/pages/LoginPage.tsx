@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { login } from '@/http/api'
+import useTokenStore from '@/store'
 import { useMutation } from '@tanstack/react-query'
 import { Loader } from 'lucide-react'
 import { useRef } from 'react'
@@ -10,14 +11,16 @@ import { Link, useNavigate } from 'react-router-dom'
 
 function LoginPage() {
 
+  const setToken = useTokenStore((state) => state.setToken) 
   const navigate = useNavigate();
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const mutation = useMutation({
     mutationFn: login,
-    onSuccess: () => {
-      console.log("Login successfully");
+    onSuccess: (response) => {
+      // console.log("Login successfully", );
+      setToken(response.data.accessToken);
       navigate('/dashboard/home')
     }
   })
