@@ -8,8 +8,9 @@ import { getBooks } from '@/http/api'
 import { Book } from '@/types';
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { useQuery } from '@tanstack/react-query'
-import { MoreHorizontal } from 'lucide-react';
+import { CirclePlus, MoreHorizontal } from 'lucide-react';
 import react from 'react'
+import { Link } from 'react-router-dom';
 
 const BookPage = () => {
 
@@ -23,17 +24,25 @@ const BookPage = () => {
 
   return (
     <div>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard/home">Home</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/">Books</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <div className='flex items-center justify-between'>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/dashboard/home">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Books</BreadcrumbLink>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <Link to={'/dashboard/books/create'}>
+          <Button className='flex items-center gap-2' variant={'default'}>
+            <CirclePlus size={20} />
+            <span>Add Books</span>
+          </Button>
+        </Link>
+      </div>
 
       <Card className='mt-6'>
         <CardHeader>
