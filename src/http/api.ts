@@ -40,3 +40,22 @@ export const createBook = async (data: FormData) => {
     },
   });
 };
+
+export const getSingleBook = async (BookId: string) => {
+  const response = api.get(`api/books/${BookId}`);
+  return (await response).data;
+};
+
+export const updateBook = async (data: FormData) => {
+  const bookId = data.get("BookId");
+  data.delete("BookId");
+  return api.post(`/api/books/${bookId}`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
+export const deleteBook = async (BookId: string) => {
+  return api.delete(`api/books/${BookId}`);
+};

@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Toaster } from "@/components/ui/toaster"
 import useTokenStore from "@/store"
 
 import { Bell, CircleUser, Home, Menu, Package, Package2, Search } from "lucide-react"
@@ -164,6 +165,7 @@ const DashboardLayout = () => {
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
           <Outlet />
         </main>
+        <Toaster />
       </div>
     </div>
 

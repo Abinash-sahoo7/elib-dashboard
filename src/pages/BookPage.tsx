@@ -1,26 +1,56 @@
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel } from '@/components/ui/dropdown-menu';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { getBooks } from '@/http/api'
+import { deleteBook, getBooks } from '@/http/api';
 import { Book } from '@/types';
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
-import { useQuery } from '@tanstack/react-query'
+import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
 import { CirclePlus, MoreHorizontal } from 'lucide-react';
-import react from 'react'
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+
 const BookPage = () => {
+  const queryClient = new QueryClient();
+  var BookId: string;
+  // var delete: any;
+  const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['books'],
     queryFn: getBooks,
-    staleTime: 10000  // milliseconds
+    staleTime: 10000,  // milliseconds
+    refetchOnMount: true,
+    refetchOnWindowFocus: true
+    // enabled: false
   });
 
   console.log('data', data);
+
+  const mutation = useMutation({
+    mutationFn: deleteBook,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['books'] });
+      console.log("Book Deleted Successfully");
+      // nav('/dashboard/Books');
+    }
+  })
+
+  const HandleDeleteBook = (event: any) => {
+    BookId = event.target.id;
+    // console.log("Delete Successfully", BookId);
+    mutation.mutate(BookId);
+    setSelectedBookId(null);
+    // <BookPage />
+  }
+
+  useEffect(() => {
+    // <BookPage />
+  }, [selectedBookId])
 
   return (
     <div>
@@ -73,7 +103,8 @@ const BookPage = () => {
             </TableHeader>
             <TableBody>
               {
-                data?.data.map((book: Book) => {
+                data?.data &&
+                data?.data.books.map((book: Book) => {
                   return (
                     <TableRow key={book._id}>
                       <TableCell className="hidden sm:table-cell">
@@ -111,8 +142,31 @@ const BookPage = () => {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem>Edit</DropdownMenuItem>
-                            <DropdownMenuItem>Delete</DropdownMenuItem>
+                            <Link to={`/dashboard/books/update/${book._id}`}>
+                              <DropdownMenuItem>
+                                Edit
+                              </DropdownMenuItem>
+                            </Link>
+                            <AlertDialog >
+                              <AlertDialogTrigger asChild>
+                                <Button variant="ghost" className='' >Delete</Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Are you absolutely sure for Delete?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    This action cannot be undone. This will permanently delete your
+                                    Book and remove your data from our servers.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction onClick={HandleDeleteBook} id={book._id}>
+                                    Continue
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>
